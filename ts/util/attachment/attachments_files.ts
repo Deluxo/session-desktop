@@ -88,6 +88,13 @@ const createWriterForExisting = (root: string) => {
     )) as any;
     const buffer = Buffer.from(encryptedBufferWithHeader.buffer);
 
+    if (
+      process.platform === 'linux' &&
+      process.arch === 'arm64' &&
+      (!buffer || (buffer && buffer.length < 1))
+    )
+      return relativePath;
+
     await fse.writeFile(normalized, buffer);
 
     return relativePath;
